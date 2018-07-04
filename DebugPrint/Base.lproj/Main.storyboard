@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="DebugPrint" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="YellowTShirt" translatesAutoresizingMaskIntoConstraints="NO" id="Xxq-9c-HKE">
+                                <rect key="frame" x="16" y="150" width="343" height="377"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aOt-nZ-Tlk">
+                                <rect key="frame" x="262" y="61.5" width="78" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Load print">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="loadPrintAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ppm-iE-nt4"/>
+                                </connections>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="clT-Fm-L1P">
+                                <rect key="frame" x="16" y="58" width="88" height="40"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I7b-0G-fDf" customClass="ColorButton" customModule="DebugPrint" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                        <color key="backgroundColor" red="1" green="0.80784313730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="KgP-zM-tS1"/>
+                                            <constraint firstAttribute="width" constant="40" id="slj-nS-Tfm"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="yellowChoiceAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3Ld-fS-OFF"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DZ7-M3-VAM" customClass="ColorButton" customModule="DebugPrint" customModuleProvider="target">
+                                        <rect key="frame" x="48" y="0.0" width="40" height="40"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Og9-P6-E0y"/>
+                                            <constraint firstAttribute="width" constant="40" id="y98-cV-h5n"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="blueChoiceAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Tot-Ss-Uun"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="0tN-On-EGI">
+                                <rect key="frame" x="23" y="559" width="136" height="40"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h3u-rA-ASs" customClass="FormatButton" customModule="DebugPrint" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Eas-Qb-f1L"/>
+                                            <constraint firstAttribute="width" constant="40" id="YME-hr-U8W"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="A3">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="a3Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7JK-Z5-IW6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1D-p6-538" customClass="FormatButton" customModule="DebugPrint" customModuleProvider="target">
+                                        <rect key="frame" x="48" y="0.0" width="40" height="40"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="78O-Wc-iUP"/>
+                                            <constraint firstAttribute="height" constant="40" id="eoJ-Bg-zsi"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="A4">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="a4Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="IFO-l1-glZ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T5G-tz-aD9" customClass="FormatButton" customModule="DebugPrint" customModuleProvider="target">
+                                        <rect key="frame" x="96" y="0.0" width="40" height="40"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="2eI-Ct-8ta"/>
+                                            <constraint firstAttribute="height" constant="40" id="3MM-Ox-Imo"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="A5">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="a5Action:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tUv-Pb-waQ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="clT-Fm-L1P" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="1g4-GL-3az"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Xxq-9c-HKE" secondAttribute="trailing" constant="16" id="4tS-zS-7i2"/>
+                            <constraint firstItem="Xxq-9c-HKE" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="IZf-UK-K0M"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Xxq-9c-HKE" secondAttribute="bottom" constant="140" id="NDn-ns-c1Z"/>
+                            <constraint firstItem="aOt-nZ-Tlk" firstAttribute="centerY" secondItem="DZ7-M3-VAM" secondAttribute="centerY" id="NTO-Bk-j1C"/>
+                            <constraint firstItem="0tN-On-EGI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="23" id="Pjx-jh-OmH"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="aOt-nZ-Tlk" secondAttribute="trailing" constant="35" id="T9w-rg-tF3"/>
+                            <constraint firstItem="Xxq-9c-HKE" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="130" id="eaj-dJ-I0a"/>
+                            <constraint firstItem="clT-Fm-L1P" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="38" id="jLO-RB-l9E"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="0tN-On-EGI" secondAttribute="bottom" constant="68" id="mrX-jd-ure"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="a3SizeButton" destination="h3u-rA-ASs" id="QVK-EP-TJL"/>
+                        <outlet property="a4SizeButton" destination="A1D-p6-538" id="WJU-d5-vDg"/>
+                        <outlet property="a5SizeButton" destination="T5G-tz-aD9" id="yKS-Og-L8d"/>
+                        <outlet property="blueChoiceButton" destination="DZ7-M3-VAM" id="uCa-wY-DlU"/>
+                        <outlet property="loadButton" destination="aOt-nZ-Tlk" id="4Aj-RG-5yx"/>
+                        <outlet property="tshirtImageView" destination="Xxq-9c-HKE" id="hfk-FB-wZ6"/>
+                        <outlet property="yellowChoiceButton" destination="I7b-0G-fDf" id="tIW-NZ-IKN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="37.600000000000001" y="31.934032983508249"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="YellowTShirt" width="783" height="931"/>
+    </resources>
+</document>
