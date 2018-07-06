@@ -29,7 +29,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var areaView: AreaView!    
     var printImages = [PrintView]()
-    var resizerView: UIView!
+    var selectedPrintIndex = 0
+    var resizerView: ResizerView!
 
     var showResizerGesture = UITapGestureRecognizer()
     var resizeGesture = UIPanGestureRecognizer()
@@ -38,7 +39,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var movePrintGesture = UIPanGestureRecognizer()
     var offSetPrint = CGPoint(x: 0, y: 0)
     var offSetResizer = CGPoint(x: 0, y: 0)
-
+    
+    var rotationGesture = UIRotationGestureRecognizer()
+    var lastRotation: CGFloat = 0
+    var originalRotation: CGFloat = 0
+    
+    var removePrintGesture = UILongPressGestureRecognizer()
+    
     override func loadView() {
         super.loadView()
         
@@ -47,6 +54,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.areaView = AreaView(picture: #imageLiteral(resourceName: "DottedArea"))
         self.view.addSubview(self.areaView)
         self.areaView.setConstraints(with: .A3, tshirtFrame: self.tshirtImageView.frame)
+        //
+        
     }
     
     //MARK: - Views
@@ -98,25 +107,45 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.showResizerGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         self.showResizerGesture.numberOfTapsRequired = 1
         self.showResizerGesture.numberOfTouchesRequired = 1
-        self.printImages[0].isUserInteractionEnabled = true
+        self.printImages[selectedPrintIndex].isUserInteractionEnabled = true
         self.showResizerGesture.delegate = self
         self.view.addGestureRecognizer(self.showResizerGesture)
     }
     
     @objc func handleTap(_ gesture: UITapGestureRecognizer) {
-        self.printImages[0].chooseResizerMode()
+        for printView in self.printImages {
+            let point = gesture.location(in: printView)
+            if printView.point(inside: point, with: nil) {
+                self.printImages[selectedPrintIndex].chooseResizerMode()
+                self.selectedPrintIndex = printView.tag
+                if self.selectedPrintIndex != printView.tag {
+                    self.selectedPrintIndex = printView.tag
+                    self.printImages[selectedPrintIndex].chooseResizerMode()
+                }
+                self.view.bringSubview(toFront: self.printImages[selectedPrintIndex])
+                self.resizerView = self.printImages[selectedPrintIndex].resizerView
+                self.view.bringSubview(toFront: self.resizerView)
+                return
+            }
+        }
     }
     
     func addResizeGesture() {
         self.resizeGesture = UIPanGestureRecognizer(target: self, action: #selector(self.resizeImage(_:)))
         self.resizeGesture.delegate = self
-        self.printImages[0].resizerView.addGestureRecognizer(self.resizeGesture)
+        self.printImages[selectedPrintIndex].resizerView.addGestureRecognizer(self.resizeGesture)
     }
     
     func addMoveGesture() {
         self.movePrintGesture = UIPanGestureRecognizer(target: self, action: #selector(self.moveImage(_:)))
         self.movePrintGesture.delegate = self
-        self.printImages[0].addGestureRecognizer(self.movePrintGesture)
+        self.printImages[selectedPrintIndex].addGestureRecognizer(self.movePrintGesture)
+    }
+    
+    func addRemoveGesture() {
+        self.removePrintGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.deleteImage(_:)))
+        self.removePrintGesture.delegate = self
+        self.printImages[selectedPrintIndex].addGestureRecognizer(self.removePrintGesture)
     }
     
     // MARK: - UIImagePickerControllerDelegate
@@ -190,81 +219,114 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     func addPrint(with sourceImage: UIImage) {
-        if !self.printImages.isEmpty {
-            self.printImages[0].resizerView.removeFromSuperview()
-            self.printImages[0].removeFromSuperview()
-        }
-        self.printImages.removeAll()
         let printView = PrintView(frame: CGRect.zero)
         self.view.addSubview(printView)
+        
+        self.view.bringSubview(toFront: printView)
+        
+        if !self.printImages.isEmpty {
+            self.printImages[selectedPrintIndex].chooseResizerMode()
+        }
+        
         printView.setConstraintsWithImage(sourceImage, areaFrame: self.areaView.frame)
+        printView.tag = self.printImages.count
+        self.selectedPrintIndex = printView.tag
+        
+//        self.rotationGesture = UIRotationGestureRecognizer(target: self, action:     #selector(rotatedView(_:)))
+//        printView.addGestureRecognizer(self.rotationGesture)
+        
         self.printImages.append(printView)
         self.addShowResizerGesture()
-        self.printImages[0].setupResizerView()
+        self.printImages[selectedPrintIndex].setupResizerView()
+        self.resizerView = self.printImages[selectedPrintIndex].resizerView
         self.addResizeGesture()
         self.addMoveGesture()
+        self.addRemoveGesture()
     }
     
     fileprivate let rotateAnimation = CABasicAnimation()
     fileprivate var rotation: CGFloat = UserDefaults.standard.rotation
-    fileprivate var startRotationAngle: CGFloat = 0
-    
-    func rotate(to: CGFloat, duration: Double = 0) {
-        rotateAnimation.fromValue = to
-        rotateAnimation.toValue = to
+    fileprivate var startRotationAngle: CGFloat = 0//0
+
+    func rotate(to: CGFloat, duration: Double = 0, view: UIView) {
+        rotateAnimation.fromValue = to //- 26
+        rotateAnimation.toValue = to //- 26
         rotateAnimation.duration = duration
         rotateAnimation.repeatCount = 0
         rotateAnimation.isRemovedOnCompletion = false
         rotateAnimation.fillMode = kCAFillModeForwards
         rotateAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        self.printImages[0].layer.add(rotateAnimation, forKey: "transform.rotation.z")
+        view.layer.add(rotateAnimation, forKey: "transform.rotation.z")
     }
+    
 }
 
 extension ViewController {
     //MARK: - Gesture actions
+    @objc func rotatedView(_ gesture: UIRotationGestureRecognizer) {
+        switch gesture.state {
+        case .began:
+            gesture.rotation = self.lastRotation
+            self.originalRotation = gesture.rotation
+        case .changed:
+            let newRotation = gesture.rotation + self.originalRotation
+            gesture.view?.transform = CGAffineTransform(rotationAngle: newRotation)
+        case .ended, .cancelled:
+            self.lastRotation = gesture.rotation
+        default:
+            break
+        }
+    }
+    
     @objc func resizeImage(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self.view)
         
-        /*if abs(translation.y - translation.x) < 3.2 {
-            self.printImages[0].resizerView.center = CGPoint(x: self.printImages[0].frame.maxX + translation.x, y: self.printImages[0].frame.maxY + translation.y)
-            self.printImages[0].resizerView.center = CGPoint(x: self.printImages[0].frame.maxX + translation.x, y: self.printImages[0].frame.maxY + translation.y)
-            if gesture.state == .changed  || gesture.state == .began {
-                self.printImages[0].widthConstraint.constant += translation.x * 2//max(translation.x, translation.y) * 2
-                gesture.setTranslation(CGPoint.zero, in: self.view)
-            } else if gesture.state == .ended || gesture.state == .cancelled {
-                
-            }
-        } else {*/
-            self.printImages[0].resizerView.center = CGPoint(x: self.printImages[0].frame.minX + self.printImages[0].bounds.width + translation.x, y: self.printImages[0].frame.minY + self.printImages[0].bounds.height + translation.y)
+            /*      if abs(translation.y - translation.x) < 25 {//3.2 {
+             self.resizerView.center = CGPoint(x: self.printImages[self.selectedPrint].frame.maxX + translation.x, y: self.printImages[0].frame.maxY + translation.y)
+             self.resizerView.center = CGPoint(x: self.printImages[self.selectedPrint].frame.maxX + translation.x, y: self.printImages[self.selectedPrint].frame.maxY + translation.y)
+             if gesture.state == .changed  || gesture.state == .began {
+             self.printImages[self.selectedPrint].widthConstraint.constant += translation.x * 2//max(translation.x, translation.y) * 2
+             gesture.setTranslation(CGPoint.zero, in: self.view)
+             } else if gesture.state == .ended || gesture.state == .cancelled {
+             
+             }
+             }
+             }   else {*/
+            
             //rotation
             let location = gesture.location(in: self.view)
             let gestureRotation = CGFloat(angle(from: location)) - startRotationAngle
+            self.moveTraceResizer(gestureRotation: gestureRotation)
+            
             switch gesture.state {
             case .began:
-                //write starting angle?
                 startRotationAngle = angle(from: location)
-                self.rotate(to: rotation - gestureRotation.degreesToRadians)
-                //rotate image
-                gesture.setTranslation(CGPoint.zero, in: self.view)            case .changed:
-                //let translation = gesture.translation(in: self.view)
-                self.rotate(to: rotation - gestureRotation.degreesToRadians)
-                //rotate image
+                self.rotate(to: rotation - gestureRotation.degreesToRadians, view: self.printImages[self.selectedPrintIndex])
+                gesture.setTranslation(CGPoint.zero, in: self.view)
+            case .changed:
+                self.rotate(to: rotation - gestureRotation.degreesToRadians, view: self.printImages[self.selectedPrintIndex])
                 gesture.setTranslation(CGPoint.zero, in: self.view)
             case .ended:
-                // update the amount of rotation
                 rotation -= gestureRotation.degreesToRadians
             default:
                 break
             }
             UserDefaults.standard.rotation = rotation
-       // }
     }
     
     func angle(from location: CGPoint) -> CGFloat {
-        let deltaY = location.y - view.center.y
-        let deltaX = location.x - view.center.x
+        let deltaY = location.y - self.printImages[self.selectedPrintIndex].center.y//view.center.y
+        let deltaX = location.x - self.printImages[self.selectedPrintIndex].center.x//view.center.x
         let angle = atan2(deltaY, deltaX) * 180 / .pi
+        //print(angle)
+        return angle < 0 ? abs(angle) : 360 - angle
+    }
+    //change center?
+    func angleResizer(from location: CGPoint) -> CGFloat {
+        let deltaY = self.resizerView.center.y -  location.y //view.center.y
+        let deltaX = self.resizerView.center.x - location.x//view.center.x
+        let angle = atan2(deltaY, deltaX) * 180 / .pi
+        //print(angle)
         return angle < 0 ? abs(angle) : 360 - angle
     }
     
@@ -272,15 +334,52 @@ extension ViewController {
         let translation = gesture.translation(in: self.view)
         switch (gesture.state) {
         case .began:
-            self.offSetPrint = CGPoint(x: self.printImages[0].horizontalConstraint.constant, y:  self.printImages[0].verticalConstraint.constant)
-            self.offSetResizer = CGPoint(x: self.printImages[0].resizerView.frame.origin.x, y:  self.printImages[0].resizerView.frame.origin.y)
+            self.offSetPrint = CGPoint(x: self.printImages[self.selectedPrintIndex].horizontalConstraint.constant, y:  self.printImages[self.selectedPrintIndex].verticalConstraint.constant)
+            self.offSetResizer = CGPoint(x: self.resizerView.frame.origin.x, y:  self.resizerView.frame.origin.y)
         case .changed:
-            self.printImages[0].horizontalConstraint.constant = offSetPrint.x + translation.x
-            self.printImages[0].verticalConstraint.constant = offSetPrint.y + translation.y
-            self.printImages[0].resizerView.frame.origin = CGPoint(x: offSetResizer.x + translation.x, y: offSetResizer.y + translation.y)
+            self.printImages[self.selectedPrintIndex].horizontalConstraint.constant = offSetPrint.x + translation.x
+            self.printImages[self.selectedPrintIndex].verticalConstraint.constant = offSetPrint.y + translation.y
+            self.printImages[self.selectedPrintIndex].resizerView.frame.origin = CGPoint(x: offSetResizer.x + translation.x, y: offSetResizer.y + translation.y)
         default:
             break
         }
+    }
+    
+    @objc func deleteImage(_ gesture: UILongPressGestureRecognizer) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let location = gesture.location(in: gesture.view)
+        var selectedPrint: PrintView?
+        for printView in self.printImages {
+            if printView.point(inside: location, with: nil) {
+                selectedPrint = printView
+            }
+        }
+        guard let printForRemove = selectedPrint else {
+            return
+        }
+        actionSheet.popoverPresentationController?.sourceView = printForRemove
+        let removeAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] (_) in
+            printForRemove.resizerView.removeFromSuperview()
+            printForRemove.removeFromSuperview()
+            self?.printImages.remove(at: printForRemove.tag)
+        }
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        actionSheet.addAction(removeAction)
+        actionSheet.addAction(cancelAction)
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    func moveTraceResizer(gestureRotation: CGFloat) {
+//        switch rotation.degreesToRadians - gestureRotation.degreesToRadians {
+//        case 0..< (.pi / 2) :
+//            print("asd")
+//        case .pi/2..<.pi:
+//            print("asd")
+//        case .pi..<.3*pi/2:
+//        case .pi/2..<.pi:
+//
+//        }
+        self.resizerView.center = CGPoint(x: self.printImages[self.selectedPrintIndex].center.x + self.printImages[self.selectedPrintIndex].frame.width/2  * (rotation.degreesToRadians - gestureRotation.degreesToRadians), y: self.printImages[self.selectedPrintIndex].center.y + self.printImages[self.selectedPrintIndex].frame.height/2 * (rotation.degreesToRadians - gestureRotation.degreesToRadians))
     }
 }
 

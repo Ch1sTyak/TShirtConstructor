@@ -19,6 +19,7 @@
 		164C423C20E62D0C00BF7392 /* ResizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164C423B20E62D0C00BF7392 /* ResizerView.swift */; };
 		164C423E20E62F6E00BF7392 /* FormatButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164C423D20E62F6E00BF7392 /* FormatButton.swift */; };
 		164C424020E6318D00BF7392 /* ColorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 164C423F20E6318D00BF7392 /* ColorButton.swift */; };
+		1655F79620EFC5B00093697C /* GestureHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1655F79520EFC5B00093697C /* GestureHandlers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		164C423B20E62D0C00BF7392 /* ResizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizerView.swift; sourceTree = "<group>"; };
 		164C423D20E62F6E00BF7392 /* FormatButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatButton.swift; sourceTree = "<group>"; };
 		164C423F20E6318D00BF7392 /* ColorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorButton.swift; sourceTree = "<group>"; };
+		1655F79520EFC5B00093697C /* GestureHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GestureHandlers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			children = (
 				164C41DD20E2635000BF7392 /* AppDelegate.swift */,
 				164C41DF20E2635000BF7392 /* ViewController.swift */,
+				1655F79520EFC5B00093697C /* GestureHandlers.swift */,
 				164C423D20E62F6E00BF7392 /* FormatButton.swift */,
 				164C423F20E6318D00BF7392 /* ColorButton.swift */,
 				164C423920E626A600BF7392 /* PrintView.swift */,
@@ -162,6 +165,7 @@
 				164C423C20E62D0C00BF7392 /* ResizerView.swift in Sources */,
 				164C41E020E2635000BF7392 /* ViewController.swift in Sources */,
 				164C423820E620C400BF7392 /* AreaView.swift in Sources */,
+				1655F79620EFC5B00093697C /* GestureHandlers.swift in Sources */,
 				164C424020E6318D00BF7392 /* ColorButton.swift in Sources */,
 				164C420E20E3855B00BF7392 /* Extensions.swift in Sources */,
 				164C41DE20E2635000BF7392 /* AppDelegate.swift in Sources */,
