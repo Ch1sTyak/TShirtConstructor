@@ -71,14 +71,4 @@ class PrintView: UIImageView, UIGestureRecognizerDelegate {
         self.resizerView.setup(with: self.frame)
         self.resizerView.hide()
     }
-    
-    func chooseResizerMode() {
-        if self.isResizingMode {
-            self.resizerView.hide()
-            self.isResizingMode = false
-        } else {
-            self.resizerView.show(with: self.frame)
-            self.isResizingMode = true
-        }
-    }
 }

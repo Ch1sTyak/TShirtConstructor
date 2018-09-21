@@ -41,3 +41,31 @@ extension UIViewController {
         }
     }
 }
+
+extension FloatingPoint {
+    var degreesToRadians: Self { return self * .pi / 180 }
+    var radiansToDegrees: Self { return self * 180 / .pi }
+}
+
+extension UserDefaults {
+    var rotation: CGFloat {
+        get {
+            return CGFloat(double(forKey: "rotation"))
+        }
+        set {
+            set(Double(newValue), forKey: "rotation")
+        }
+    }
+}
+
+extension UIGestureRecognizer {
+    func detectSelectedPrint(among printImages: [PrintView]) -> Int? {
+        for printView in printImages {
+            let point = self.location(in: printView)
+            if printView.point(inside: point, with: nil) {
+                return printView.tag
+            }
+        }
+        return nil
+    }
+}
